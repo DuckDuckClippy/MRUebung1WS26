@@ -73,6 +73,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let inlineSession = null;
       let fov = document.getElementById('vertFOV');
       let fovLabel = document.getElementById('vertFOVLabel');
+
       function updateFov() {
         let value = parseFloat(fov.value);
         // The inlineVerticalFieldOfView is specified in radians.
@@ -100,6 +101,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let xrButtonAR = null;
       let xrImmersiveRefSpace = null;
       let xrInlineRefSpace = null;
+      let statusAR = false;
 
       // WebGL scene globals.
       let gl = null;
@@ -115,7 +117,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           onEndSession: onEndSession
         });
         document.querySelector('header').appendChild(xrButton.domElement);
-        
+
           xrButtonAR = new WebXRButton({
               onRequestSession: onRequestSessionAR,
               onEndSession: onEndSession,
@@ -161,6 +163,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               // Set a flag on the session so we can differentiate it from the
               // inline session.
               session.isImmersive = true;
+              statusAR = true;
               onSessionStarted(session);
           });
       }
@@ -229,6 +232,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if (event.session.isImmersive) {
           xrButton.setSession(null);
           xrButtonAR.setSession(null);
+          statusAR = false;
         }
       }
 
@@ -265,7 +269,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             scene.draw(view.projectionMatrix, view.transform);
 
             if(session.isImmersive){
-                if (session.type === 'immersive-ar') {
+                if (statusAR === true) {
                     skybox.visible = false;
                 }
             }
