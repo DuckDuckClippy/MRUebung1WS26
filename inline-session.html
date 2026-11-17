@@ -108,8 +108,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let renderer = null;
       let scene = new Scene();
       let solarSystem = new Gltf2Node({url: 'media/gltf/space/space.gltf'});
+      let skybox = new SkyboxNode({url: 'media/textures/milky-way-4k.png'});
       scene.addNode(solarSystem);
-      scene.addNode(new SkyboxNode({url: 'media/textures/milky-way-4k.png'}));
+      scene.addNode(skybox);
 
       function initXR() {
         xrButton = new WebXRButton({
@@ -267,13 +268,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             gl.viewport(viewport.x, viewport.y,
                         viewport.width, viewport.height);
 
-            scene.draw(view.projectionMatrix, view.transform);
+              if(session.isImmersive){
+                  if (statusAR === true) {
+                      skybox.visible = false;
+                  }
+              }
 
-            if(session.isImmersive){
-                if (statusAR === true) {
-                    skybox.visible = false;
-                }
-            }
+            scene.draw(view.projectionMatrix, view.transform);
           }
         }
 
