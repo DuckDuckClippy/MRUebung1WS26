@@ -114,20 +114,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           onRequestSession: onRequestSession,
           onEndSession: onEndSession
         });
+        document.querySelector('header').appendChild(xrButton.domElement);
+        
           xrButtonAR = new WebXRButton({
               onRequestSession: onRequestSessionAR,
-              onEndSession: onEndSession
+              onEndSession: onEndSession,
+              textContent: 'Request AR Session',
+              textXRNotFoundTitle: 'AR Not Supported',
+              textEnterXRTitle: 'Enter AR',
+              textExitXRTitle: 'Exit AR',
           });
-
-        document.querySelector('header').appendChild(xrButton.domElement);
         document.querySelector('header').appendChild(xrButtonAR.domElement);
 
         if (navigator.xr) {
           navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
             xrButton.enabled = supported;
-              navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-                  xrButtonAR.enabled = supported;
           });
+
+          navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+            xrButtonAR.enabled = supported;
+            });
 
           // Start up an inline session, which should always be supported on
           // browsers that support WebXR regardless of the available hardware.
@@ -257,6 +263,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         viewport.width, viewport.height);
 
             scene.draw(view.projectionMatrix, view.transform);
+
+            if(session.isImmersive){
+                if (session.type === 'immersive-ar') {
+                    skybox.visible = false;
+                }
+            }
           }
         }
 
